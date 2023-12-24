@@ -129,6 +129,9 @@
   <ItemGroup>
     <ClCompile Include="BattleShip_FMI.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BattleShip_FMI.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
