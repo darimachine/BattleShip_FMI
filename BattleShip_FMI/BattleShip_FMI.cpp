@@ -87,21 +87,32 @@ int enterBoardSize()
  * @brief Prints the game board to the console.
  * @param Board The game board represented as a 2D vector.
  */
-void printBoard(const vector<vector<char>> Board)
+void printBoard(const vector<vector<char>> board)
 {
     //cout << "  ";
-    for (int i = 0; i < Board.size(); i++)
+    for (int i = 0; i < board.size(); i++)
     {
         //cout << i << "  ";
         cout << setw(4) << i+1 ;
     }
     cout << endl;
-    for (int i = 0; i < Board.size(); i++)
+    for (int i = 0; i < board.size(); i++)
     {
         cout << i+1 << " ";
-        for (int j = 0; j < Board.size(); j++)
+        for (int j = 0; j < board.size(); j++)
         {
-            cout <<"[" << Board[i][j] <<"] ";
+            if (board[i][j] == 'X') {
+                // Print 'X' in red
+                cout << "\033[1;31m" << "[" << "X" << "] " << "\033[0m";
+            }
+            else if (board[i][j] == 'O')
+            {
+                cout << "\033[1;32m" << "[" << "O" << "] " << "\033[0m";
+            }
+            else {
+                cout << "[" << board[i][j] << "] ";
+            }
+            
         }
         cout << endl;
     }
@@ -245,6 +256,13 @@ void placeShipWithUserInput(vector<vector<char>>& board, int choice)
         }
     }
 }
+void copyAvaibleShips(int* copy)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        copy[i] = availableShips[i];
+    }
+}
 /**
  * @brief Places all ships on the game board.
  *
@@ -252,32 +270,36 @@ void placeShipWithUserInput(vector<vector<char>>& board, int choice)
  */
 void placeAllShipsOnBoard(vector<vector<char>> &board)
 {
-    
-    while (getTotalRemainingShips(availableShips) != 0)
+    int copy[4];
+    copyAvaibleShips(copy);
+    while (getTotalRemainingShips(copy) != 0)
     {
+        
         cout << "Which ship would you like to place?" << endl;
-        displayAvailableShips(availableShips);
+        printBoard(board);
+        displayAvailableShips(copy);
         unsigned int choice = 0;
         cin >> choice;
         choice--; // I remove 1 because i dont want player to enter 0 as an choice of ship
-        if (choice > 3 || availableShips[choice]==0)
+        if (choice > 3 || copy[choice]==0)
         {
             cout << "Incorrect Choice!!"<<endl;
             continue;
         }
-        availableShips[choice]--;
+        copy[choice]--;
         placeShipWithUserInput(board, choice);
-        printBoard(board);
     }
+    printBoard(board);
+
     
 
 }
-/* @brief Generate a random number between minand max
-* @param Takes Min And Max
-* @return Return Random Number Between Min And Max
-*/ 
-int getRandomNumber(int min, int max) {
-    return min + rand() % (max - min + 1);
+bool isValidCoordinates(vector<vector<char>> attackedBoard, unsigned int x, unsigned int y)
+{
+    int size = attackedBoard.size()-1;
+    if (x > size || y > size) return false;
+    if (attackedBoard[x][y] == 'X' || attackedBoard[x][y] == 'O') return false;
+    return true;
 }
 /**
  * @brief Checks if the game is over by determining if all ships on the player's board have been sunk.
@@ -310,6 +332,13 @@ bool isGameOver(vector<vector<char>> playerBoard, vector<vector<char>> attackedB
  * @param board The game board represented as a 2D vector.
  * @param choice The index representing the type of the ship to be placed.
  */
+ /* @brief Generate a random number between minand max
+ * @param Takes Min And Max
+ * @return Return Random Number Between Min And Max
+ */
+int getRandomNumber(int min, int max) {
+    return min + rand() % (max - min + 1);
+}
 void placeRandomShip(vector<vector<char>>& board, int choice)
 {
     int size = board.size() - 1;
@@ -341,6 +370,33 @@ void placeRandomShip(vector<vector<char>>& board, int choice)
         }
     }
 }
+
+/**
+ * @brief Places all ships randomly on the game board for a player.
+ *
+ * This function randomly selects ships and places them on the board until all ships are placed.
+ * It uses the placeRandomShip function and updates the available ships accordingly.
+ *
+ * @param board The game board represented as a 2D vector.
+ */
+void placeAllShipsRandomly(vector<vector<char>> &board)
+{
+    
+    int copy[4] = {};
+    copyAvaibleShips(copy);
+    while (getTotalRemainingShips(copy) != 0)
+    {
+        unsigned int choice = getRandomNumber(0, 3);
+        if (copy[choice] == 0)
+        {
+            continue;
+        }
+        copy[choice]--;
+        placeRandomShip(board, choice);
+        //printBoard(board);
+    }
+  
+}
 /**
  * @brief Validates the maximum number of ships based on the size of the game board.
  *
@@ -367,29 +423,6 @@ bool numberOfShipsLimit(int size)
     // If it does, return false indicating that the user has exceeded the allowed limit for ships.
     // Otherwise, return true, indicating that the user can add more ships.
     return (totalShips <= (LIMIT / 2));
-}
-/**
- * @brief Places all ships randomly on the game board for a player.
- *
- * This function randomly selects ships and places them on the board until all ships are placed.
- * It uses the placeRandomShip function and updates the available ships accordingly.
- *
- * @param board The game board represented as a 2D vector.
- */
-void placeAllShipsRandomly(vector<vector<char>> board)
-{
-    srand(time(0));
-    while (getTotalRemainingShips(availableShips) != 0)
-    {
-        unsigned int choice = getRandomNumber(0, 3);
-        if (availableShips[choice] == 0)
-        {
-            continue;
-        }
-        availableShips[choice]--;
-        placeRandomShip(board, choice);
-        printBoard(board);
-    }
 }
 void setShipCount(int boardSize)
 {
@@ -438,19 +471,75 @@ void setShipCount(int boardSize)
     return;
 
 }
+void chooseBoard(vector<vector<char>> &board)
+{
+    cout << "Do you want to generate Your Board Automaticly?"<<endl;
+    cout << "1) Yes" << endl;
+    cout << "2) No" << endl;
+    unsigned int choice = 0;
+    cin >> choice;
+    while (true)
+    {
+        if (choice == 1)
+        {
+            placeAllShipsRandomly(board);
+            break;
+        }
+        else if (choice == 2)
+        {
+            placeAllShipsOnBoard(board);
+            break;
+        }
+        else {
+            cout << "Incorrect Input" << endl;
+            cin >> choice;
+        }
+    }
+    
+}
+void hitShip(const vector<vector<char>> playerBoard, vector<vector<char>> attackedBoard)
+{
+    while (true)
+    {
+        cout << "Choose (x ,y) coordinates to Strike" << endl;
+        int x, y;
+        cin >> x >> y;
+        x--;
+        y--;
+        if (!isValidCoordinates(attackedBoard, x, y)) 
+        {
+            cout << "Incorrect square to Strike!! Try Again" << endl;
+            continue;
+        }
+        attackedBoard[x][y]=
+    }
+    
+}
 void playGame()
 {
+
     const int BOARD_SIZE = enterBoardSize();
-    setShipCount(BOARD_SIZE);
-    int choice = chooseOpponent();
-    
     vector<vector<char>> player1Board(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
     vector<vector<char>> player2Board(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
+    setShipCount(BOARD_SIZE);
+    int choice = chooseOpponent();
+    cout << "Player 1:" << endl;
+    chooseBoard(player1Board);
+    if (choice == 2) {
+
+        placeAllShipsRandomly(player2Board);
+    }
+    else if (choice == 1) {
+        cout << "Player 2:" << endl;
+        chooseBoard(player2Board);
+    }
+    vector<vector<char>> player1AttackedBoard(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
+    vector<vector<char>> player2AttackedBoard(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
     printBoard(player1Board);
-    placeAllShipsOnBoard(player1Board);
+    printBoard(player2Board);
+    printBoard(player1AttackedBoard);
+    
 }
-
-
 
 /**
  * @brief Initiates the Battleships game by allowing the player to choose an opponent and board size.
@@ -460,6 +549,7 @@ void playGame()
  */
 void StartUp()
 {
+    srand(time(0));
     while (true)
     {
         cout << ">1. Play New Game: " << endl;
@@ -479,6 +569,7 @@ void StartUp()
 }
 int main()
 {
+    
     StartUp();
 
 }
