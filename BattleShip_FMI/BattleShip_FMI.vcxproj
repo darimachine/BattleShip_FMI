@@ -128,9 +128,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BattleShip_FMI.cpp" />
+    <ClCompile Include="GameSetup.cpp" />
+    <ClCompile Include="PlayerActions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BattleShip_FMI.h" />
+    <ClInclude Include="GameLogic.h" />
+    <ClInclude Include="GameSetup.h" />
+    <ClInclude Include="PlayerActions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

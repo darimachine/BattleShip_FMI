@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <ctime>
 #include "BattleShip_FMI.h"
+#include "GameSetup.h"
 using namespace std;
 
 /**
@@ -27,9 +28,6 @@ constexpr int ships[NUM_SHIP_TYPES] = { 2,3,4,5 }; // on index 0 equals ship 1 w
  */
 int availableShips[NUM_SHIP_TYPES] = { 1,1,1,1 };
 
-/**
- * @brief Prints the rules of the Battleships game to the console.
- */
 void printGameRules() {
     cout << "**************************************************\n";
     cout << "              BATTLESHIPS - GAME RULES            \n";
@@ -116,10 +114,7 @@ void printBoard(const vector<vector<char>> board)
         }
         cout << endl;
     }
-}
-void enterNumberOfShips(int numberShips[], int boardSize)
-{
-    cout << "Which Ship";
+    cout << endl;
 }
 /**
  * @brief Gets the total number of remaining ships.
@@ -316,7 +311,7 @@ bool isGameOver(vector<vector<char>> playerBoard, vector<vector<char>> attackedB
     {
         for (int j = 0; j < playerBoard.size(); j++)
         {
-            if (!(playerBoard[i][j] != '.') && (attackedBoard[i][j] != 'X'))
+            if ((playerBoard[i][j] != '.') && (attackedBoard[i][j] != 'X'))
                 return false;
         }
     }
@@ -497,12 +492,65 @@ void chooseBoard(vector<vector<char>> &board)
     }
     
 }
-void hitShip(const vector<vector<char>> playerBoard, vector<vector<char>> attackedBoard)
+void sunkedShips(const vector<vector<char>> playerBoard, vector<vector<char>>& attackedBoard, int * copyAvaibleShips)
 {
+    int counterPetrolBoat = 0;
+    int counterSubMarine = 0;
+    int counterDestroyer = 0;
+    int counterAircraft = 0;
+    int size = playerBoard.size();
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (copyAvaibleShips[0] != 0 && playerBoard[i][j] == 'P' && attackedBoard[i][j] == 'X')
+            {
+                counterPetrolBoat++;
+            }
+            if (copyAvaibleShips[1] != 0 && playerBoard[i][j] == 'S' && attackedBoard[i][j] == 'X')
+            {
+                counterSubMarine++;
+            }
+            if (copyAvaibleShips[2] != 0 && playerBoard[i][j] == 'D' && attackedBoard[i][j] == 'X')
+            {
+                counterDestroyer++;
+            }
+            if (copyAvaibleShips[3] != 0 && playerBoard[i][j] == 'A' && attackedBoard[i][j] == 'X')
+            {
+                counterAircraft++;
+            }
+        }
+    }
+    if (counterPetrolBoat == ships[0])
+    {
+        
+        cout << "\033[1;31m" << "You Sank Enemy Patrol Boat" << "\033[0m" <<endl;
+        copyAvaibleShips[0]--;
+    }
+    if (counterSubMarine == ships[1])
+    {
+        cout << "\033[1;31m" << "You Sank Enemy Submarine" << "\033[0m" << endl;
+        copyAvaibleShips[1]--;
+    }
+    if (counterDestroyer == ships[2])
+    {
+        cout << "\033[1;31m" << "You Sank Enemy Destroyer" << "\033[0m" << endl;
+        copyAvaibleShips[2]--;
+    }
+    if (counterAircraft == ships[3])
+    {
+        cout << "\033[1;31m" << "You Sank Enemy AirCraft" << "\033[0m" << endl;
+        copyAvaibleShips[3]--;
+    }
+    
+}
+void hitShip(const vector<vector<char>> playerBoard, vector<vector<char>> &attackedBoard,int * copyAvailableShips)
+{
+    
+    int x, y;
     while (true)
     {
         cout << "Choose (x ,y) coordinates to Strike" << endl;
-        int x, y;
         cin >> x >> y;
         x--;
         y--;
@@ -511,9 +559,61 @@ void hitShip(const vector<vector<char>> playerBoard, vector<vector<char>> attack
             cout << "Incorrect square to Strike!! Try Again" << endl;
             continue;
         }
-        attackedBoard[x][y]=
+        break;
+        
+    }
+    if (playerBoard[x][y] == '.') {
+        attackedBoard[x][y] = 'O';
+        cout << "\033[1;33m" << "You Missed" << "\033[0m"<<endl;
+      
+    }
+    else {
+        attackedBoard[x][y] = 'X';
+        cout << "\033[1;34m" << "You Hit" << "\033[0m"<<endl;
+       
+        sunkedShips(playerBoard, attackedBoard, copyAvailableShips);
     }
     
+}
+void playPlayerVsPlayer(std::vector<std::vector<char>>& player2Board, std::vector<std::vector<char>>& player2AttackedBoard, std::vector<std::vector<char>>& player1Board, std::vector<std::vector<char>>& player1AttackedBoard)
+{
+    int copyPlayer1Ships[4];
+    copyAvaibleShips(copyPlayer1Ships);
+    int copyPlayer2Ships[4];
+    copyAvaibleShips(copyPlayer2Ships);
+    bool player1Turn = true;
+    while (true)
+    {
+        if (player1Turn)
+        {
+            cout << "Player 2 Board\n---------------------------------\n";
+            printBoard(player2AttackedBoard);
+            cout << "Player 1 On Turn" << endl;
+            hitShip(player2Board, player2AttackedBoard,copyPlayer2Ships);
+            player1Turn = false;
+            printBoard(player2AttackedBoard);
+            cout << "\033[1;31m" <<"-----------------------------------"<< "\033[0m"<<endl;
+        }
+        else {
+            cout << "Player 1 Board\n---------------------------------\n";
+            printBoard(player1AttackedBoard);
+            cout << "Player 2 On Turn" << endl;
+            hitShip(player1Board, player1AttackedBoard,copyPlayer1Ships);
+            player1Turn = true;
+            printBoard(player1AttackedBoard);
+            cout << "\033[1;31m" << "-----------------------------------" << "\033[0m"<<endl;
+        }
+        if (isGameOver(player1Board, player1AttackedBoard)) {
+            cout << "\033[1;32m" << "Player 2 WON" << "\033[0m";
+            exit(0);
+        }
+        if (isGameOver(player2Board, player2AttackedBoard)) {
+            cout << "\033[1;32m" << "Player 1 WON" << "\033[0m";
+            
+            exit(0);
+        }
+
+    }
 }
 void playGame()
 {
@@ -521,6 +621,8 @@ void playGame()
     const int BOARD_SIZE = enterBoardSize();
     vector<vector<char>> player1Board(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
     vector<vector<char>> player2Board(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
+    vector<vector<char>> player1AttackedBoard(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
+    vector<vector<char>> player2AttackedBoard(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
     setShipCount(BOARD_SIZE);
     int choice = chooseOpponent();
     cout << "Player 1:" << endl;
@@ -532,14 +634,18 @@ void playGame()
     else if (choice == 1) {
         cout << "Player 2:" << endl;
         chooseBoard(player2Board);
+        printBoard(player1Board);
+        printBoard(player2Board);
+        playPlayerVsPlayer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard);
     }
-    vector<vector<char>> player1AttackedBoard(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
-    vector<vector<char>> player2AttackedBoard(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
+    
     printBoard(player1Board);
     printBoard(player2Board);
     printBoard(player1AttackedBoard);
     
 }
+
+
 
 /**
  * @brief Initiates the Battleships game by allowing the player to choose an opponent and board size.
