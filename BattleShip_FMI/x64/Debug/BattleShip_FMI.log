@@ -1,2 +1,12 @@
 ﻿  BattleShip_FMI.cpp
+C:\Users\Serhan\Documents\BattleShip_FMI_UNI\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(111,30): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Serhan\Documents\BattleShip_FMI_UNI\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(112,11): warning C4018: '>': signed/unsigned mismatch
+C:\Users\Serhan\Documents\BattleShip_FMI_UNI\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(112,24): warning C4018: '>': signed/unsigned mismatch
+C:\Users\Serhan\Documents\BattleShip_FMI_UNI\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(117,23): warning C4018: '>': signed/unsigned mismatch
+C:\Users\Serhan\Documents\BattleShip_FMI_UNI\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(121,23): warning C4018: '>': signed/unsigned mismatch
+C:\Users\Serhan\Documents\BattleShip_FMI_UNI\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(222,32): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Serhan\Documents\BattleShip_FMI_UNI\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(254,50): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Serhan\Documents\BattleShip_FMI_UNI\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(254,50): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Serhan\Documents\BattleShip_FMI_UNI\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(264,13): warning C4018: '>': signed/unsigned mismatch
+C:\Users\Serhan\Documents\BattleShip_FMI_UNI\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(270,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   BattleShip_FMI.vcxproj -> C:\Users\Serhan\Documents\BattleShip_FMI_UNI\BattleShip_FMI\x64\Debug\BattleShip_FMI.exe
