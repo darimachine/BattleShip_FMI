@@ -575,6 +575,32 @@ void hitShip(const vector<vector<char>> playerBoard, vector<vector<char>> &attac
     }
     
 }
+void hitShipRandomly(const vector<vector<char>> playerBoard, vector<vector<char>>& attackedBoard, int* copyAvailableShips)
+{
+    int size = playerBoard.size() - 1;
+    int x, y;
+    while (true)
+    {
+        x = getRandomNumber(0, size);
+        y = getRandomNumber(0, size);
+        if (!isValidCoordinates(attackedBoard, x, y))
+        {
+            continue;
+        }
+        break;
+    }
+    if (playerBoard[x][y] == '.') {
+        attackedBoard[x][y] = 'O';
+        cout << "\033[1;33m" << "Computer Missed" << "\033[0m" << endl;
+
+    }
+    else {
+        attackedBoard[x][y] = 'X';
+        cout << "\033[1;34m" << "Computer Hit" << "\033[0m" << endl;
+
+        sunkedShips(playerBoard, attackedBoard, copyAvailableShips);
+    }
+}
 void playPlayerVsPlayer(std::vector<std::vector<char>>& player2Board, std::vector<std::vector<char>>& player2AttackedBoard, std::vector<std::vector<char>>& player1Board, std::vector<std::vector<char>>& player1AttackedBoard)
 {
     int copyPlayer1Ships[4];
@@ -615,6 +641,44 @@ void playPlayerVsPlayer(std::vector<std::vector<char>>& player2Board, std::vecto
 
     }
 }
+void playPlayerVsComputer(std::vector<std::vector<char>>& player2Board, std::vector<std::vector<char>>& player2AttackedBoard, std::vector<std::vector<char>>& player1Board, std::vector<std::vector<char>>& player1AttackedBoard)
+{
+    int copyPlayer1Ships[4];
+    copyAvaibleShips(copyPlayer1Ships);
+    int copyPlayer2Ships[4];
+    copyAvaibleShips(copyPlayer2Ships);
+    bool isPlayerTurn = true;
+    while (true)
+    {
+        if (isPlayerTurn) {
+            cout << "Computer Board\n---------------------------------\n";
+            printBoard(player2AttackedBoard);
+            cout << "Player On Turn" << endl;
+            hitShip(player2Board, player2AttackedBoard, copyPlayer2Ships);
+            printBoard(player2AttackedBoard);
+            cout << "\033[1;31m" << "-----------------------------------" << "\033[0m" << endl;
+            isPlayerTurn = false;
+        }
+        else {
+            /*cout << "Player Board\n--------------------------" << endl;
+            printBoard(player1Board);*/
+            cout << "Computer On Turn" << endl;
+            hitShipRandomly (player1Board, player1AttackedBoard, copyPlayer1Ships);
+            printBoard(player1AttackedBoard);
+            cout << "\033[1;31m" << "-----------------------------------" << "\033[0m" << endl;
+            isPlayerTurn = true;
+        }
+        if (isGameOver(player1Board, player1AttackedBoard)) {
+            cout << "\033[1;32m" << "Computer WON" << "\033[0m";
+            exit(0);
+        }
+        if (isGameOver(player2Board, player2AttackedBoard)) {
+            cout << "\033[1;32m" << "Player WON" << "\033[0m";
+
+            exit(0);
+        }
+    }
+}
 void playGame()
 {
 
@@ -630,6 +694,9 @@ void playGame()
     if (choice == 2) {
 
         placeAllShipsRandomly(player2Board);
+        cout << "Player Board" << endl;
+        printBoard(player1Board);
+        playPlayerVsComputer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard);
     }
     else if (choice == 1) {
         cout << "Player 2:" << endl;
