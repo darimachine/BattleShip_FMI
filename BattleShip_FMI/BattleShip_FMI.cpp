@@ -75,14 +75,6 @@ void saveGame(const std::vector<std::vector<char>>& player1Board,
     // Close the file
     outFile.close();
 }
-void loadGame(vector<vector<char>>& player1Board,
-    vector<vector<char>>& player2Board,
-    vector<vector<char>>& player1AttackedBoard,
-    vector<vector<char>>& player2AttackedBoard)
-{
-    // Open the file for reading
-    
-}
 //-----------------------------
 void printGameRules() {
     cout << "**************************************************\n";
@@ -178,7 +170,7 @@ void printBoard(const vector<vector<char>> board)
  * @param ships An array representing the number of ships of each type.
  * @return The total number of remaining ships.
  */
-int getTotalRemainingShips(int ships[])
+int getTotalRemainingShips(const int ships[])
 {
     int sum = 0;
     for (int i = 0; i < NUM_SHIP_TYPES; i++)
@@ -596,7 +588,6 @@ void sunkedShips(const vector<vector<char>> playerBoard, vector<vector<char>>& a
     }
     if (counterPetrolBoat == ships[0])
     {
-        
         cout << "\033[1;31m" << "You Sank Enemy Patrol Boat" << "\033[0m" <<endl;
         copyAvaibleShips[0]--;
     }
