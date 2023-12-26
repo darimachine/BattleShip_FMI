@@ -1,12 +1,13 @@
 ﻿// BattleShip_FMI.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
 #include <iostream>
 #include <vector>
 #include <iomanip>
 #include <ctime>
 #include "BattleShip_FMI.h"
 #include "GameSetup.h"
+#include <fstream>
+
 using namespace std;
 
 /**
@@ -27,7 +28,62 @@ constexpr int ships[NUM_SHIP_TYPES] = { 2,3,4,5 }; // on index 0 equals ship 1 w
  * @brief An array representing the initial number of each ship type available to players.
  */
 int availableShips[NUM_SHIP_TYPES] = { 1,1,1,1 };
+//SAVING GAME
+void saveMatrix(ofstream& outFile, const vector<vector<char>>& matrix)
+{
+    int rows = matrix.size();
+    // Save matrix elements
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < rows; ++j) {
+            outFile << matrix[i][j] << " ";
+        }
+        outFile << std::endl;
+    }
+}
+void loadMatrix(ifstream& inFile, vector<vector<char>>& matrix)
+{
+    // Read matrix dimensions
+    int rows = matrix.size();
+    // Read matrix elements
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < rows; ++j) {
+            inFile >> matrix[i][j];
+        }
+    }
+}
+void saveGame(const std::vector<std::vector<char>>& player1Board,
+    const std::vector<std::vector<char>>& player2Board,
+    const std::vector<std::vector<char>>& player1AttackedBoard,
+    const std::vector<std::vector<char>>& player2AttackedBoard,
+    bool isPlayer1Turn,bool isPlayingToComputer)
+{
+    // Open the file for writing
+    std::ofstream outFile("saved_game.txt");
 
+    // Save information about the game state
+    outFile << isPlayer1Turn << std::endl;
+    outFile << isPlayingToComputer << std::endl;
+    int rows = player1Board.size();
+    outFile << rows << endl;
+
+    // Save the matrices
+    saveMatrix(outFile, player1Board);
+    saveMatrix(outFile, player2Board);
+    saveMatrix(outFile, player1AttackedBoard);
+    saveMatrix(outFile, player2AttackedBoard);
+
+    // Close the file
+    outFile.close();
+}
+void loadGame(vector<vector<char>>& player1Board,
+    vector<vector<char>>& player2Board,
+    vector<vector<char>>& player1AttackedBoard,
+    vector<vector<char>>& player2AttackedBoard)
+{
+    // Open the file for reading
+    
+}
+//-----------------------------
 void printGameRules() {
     cout << "**************************************************\n";
     cout << "              BATTLESHIPS - GAME RULES            \n";
@@ -232,6 +288,11 @@ void placeShipWithUserInput(vector<vector<char>>& board, int choice)
         cout << "2) VERTICAL" << endl;
         unsigned int shipDirection = 0;
         cin >> shipDirection;
+        if (shipDirection != 1 && shipDirection != 2)
+        {
+            cout << "Incorrect Choice"<<endl;
+            continue;
+        }
         unsigned int x = 0;
         unsigned int y = 0;
         cout << "Enter Starting Point (x, y) ("<<1<<", "<< board.size() << ")" << endl;
@@ -317,6 +378,14 @@ bool isGameOver(vector<vector<char>> playerBoard, vector<vector<char>> attackedB
     }
     return true;
 }
+
+ /* @brief Generate a random number between minand max
+ * @param Takes Min And Max
+ * @return Return Random Number Between Min And Max
+ */
+int getRandomNumber(int min, int max) {
+    return min + rand() % (max - min + 1);
+}
 /**
  * @brief Places a ship randomly on the game board for the computer player.
  *
@@ -327,13 +396,6 @@ bool isGameOver(vector<vector<char>> playerBoard, vector<vector<char>> attackedB
  * @param board The game board represented as a 2D vector.
  * @param choice The index representing the type of the ship to be placed.
  */
- /* @brief Generate a random number between minand max
- * @param Takes Min And Max
- * @return Return Random Number Between Min And Max
- */
-int getRandomNumber(int min, int max) {
-    return min + rand() % (max - min + 1);
-}
 void placeRandomShip(vector<vector<char>>& board, int choice)
 {
     int size = board.size() - 1;
@@ -421,16 +483,27 @@ bool numberOfShipsLimit(int size)
 }
 void setShipCount(int boardSize)
 {
-    cout << "Do you want to set mannualy how many ships would be there?" << endl;
-    cout << "Default:\n \
+    unsigned choice = 0;
+    while (true)
+    {
+        cout << "Do you want to set mannualy how many ships would be there?" << endl;
+        cout << "Default:\n \
         1 - Patrol Boat(2 cells)\n \
         1 - Submarine(3 cells)\n \
         1 - Destroyer(4 cells)\n \
         1 - Aircraft carrier(5 cells) \
         " << endl;
-    cout << " 1) Yes\n 2) No\n";
-    unsigned choice = 0;
-    cin >> choice;
+        cout << " 1) Yes\n 2) No\n";
+      
+        cin >> choice;
+        if (choice != 1 && choice != 2) {
+            cout << "Incorrect Choice" << endl;
+        }
+        else {
+            break;
+        }
+    }
+    
     if (choice == 1)
     {
         while (true)
@@ -446,10 +519,10 @@ void setShipCount(int boardSize)
             unsigned int choice = 0;
             cin >> choice;
             choice--; // because of 0 index
-            if (choice == 9) return;
+            if (choice == 8) return;
             if (choice > 3)
             {
-                cout << "Incorrect Input";
+                cout << "Incorrect Input\n";
                 continue;
             }
             availableShips[choice]++;
@@ -462,7 +535,7 @@ void setShipCount(int boardSize)
         }
         
     }
-
+    
     return;
 
 }
@@ -544,14 +617,15 @@ void sunkedShips(const vector<vector<char>> playerBoard, vector<vector<char>>& a
     }
     
 }
-void hitShip(const vector<vector<char>> playerBoard, vector<vector<char>> &attackedBoard,int * copyAvailableShips)
+bool hitShip(const vector<vector<char>> playerBoard, vector<vector<char>> &attackedBoard,int * copyAvailableShips)
 {
     
     int x, y;
     while (true)
     {
-        cout << "Choose (x ,y) coordinates to Strike" << endl;
+        cout << "Choose (x ,y) coordinates to Strike                         !!!Type x=99 and y=99 To Save The Game and EXIT" << endl;
         cin >> x >> y;
+        if (x == 99 && y == 99) return true;
         x--;
         y--;
         if (!isValidCoordinates(attackedBoard, x, y)) 
@@ -573,7 +647,7 @@ void hitShip(const vector<vector<char>> playerBoard, vector<vector<char>> &attac
        
         sunkedShips(playerBoard, attackedBoard, copyAvailableShips);
     }
-    
+    return false;
 }
 void hitShipRandomly(const vector<vector<char>> playerBoard, vector<vector<char>>& attackedBoard, int* copyAvailableShips)
 {
@@ -601,22 +675,29 @@ void hitShipRandomly(const vector<vector<char>> playerBoard, vector<vector<char>
         sunkedShips(playerBoard, attackedBoard, copyAvailableShips);
     }
 }
-void playPlayerVsPlayer(std::vector<std::vector<char>>& player2Board, std::vector<std::vector<char>>& player2AttackedBoard, std::vector<std::vector<char>>& player1Board, std::vector<std::vector<char>>& player1AttackedBoard)
+void playPlayerVsPlayer(vector<vector<char>>& player2Board,vector<vector<char>>& player2AttackedBoard, vector<vector<char>>& player1Board,
+    vector<vector<char>>& player1AttackedBoard,bool isPlayer1Turn)
 {
+    constexpr bool isPlayingWithComputer = false;
+    /* Saving the avaible ships in the board. After that keeping track which one was sank*/
     int copyPlayer1Ships[4];
-    copyAvaibleShips(copyPlayer1Ships);
+    copyAvaibleShips(copyPlayer1Ships); 
     int copyPlayer2Ships[4];
     copyAvaibleShips(copyPlayer2Ships);
-    bool player1Turn = true;
+    
     while (true)
     {
-        if (player1Turn)
+        if (isPlayer1Turn)
         {
             cout << "Player 2 Board\n---------------------------------\n";
             printBoard(player2AttackedBoard);
             cout << "Player 1 On Turn" << endl;
-            hitShip(player2Board, player2AttackedBoard,copyPlayer2Ships);
-            player1Turn = false;
+            if (hitShip(player2Board, player2AttackedBoard, copyPlayer2Ships))
+            {
+                saveGame(player1Board, player2Board, player1AttackedBoard, player2AttackedBoard, isPlayer1Turn, isPlayingWithComputer);
+                exit(0);
+            }
+            isPlayer1Turn = false;
             printBoard(player2AttackedBoard);
             cout << "\033[1;31m" <<"-----------------------------------"<< "\033[0m"<<endl;
         }
@@ -624,8 +705,12 @@ void playPlayerVsPlayer(std::vector<std::vector<char>>& player2Board, std::vecto
             cout << "Player 1 Board\n---------------------------------\n";
             printBoard(player1AttackedBoard);
             cout << "Player 2 On Turn" << endl;
-            hitShip(player1Board, player1AttackedBoard,copyPlayer1Ships);
-            player1Turn = true;
+            if (hitShip(player1Board, player1AttackedBoard, copyPlayer1Ships))
+            {
+                saveGame(player1Board, player2Board, player1AttackedBoard, player2AttackedBoard, isPlayer1Turn, isPlayingWithComputer);
+                exit(0);
+            }
+            isPlayer1Turn = true;
             printBoard(player1AttackedBoard);
             cout << "\033[1;31m" << "-----------------------------------" << "\033[0m"<<endl;
         }
@@ -643,18 +728,24 @@ void playPlayerVsPlayer(std::vector<std::vector<char>>& player2Board, std::vecto
 }
 void playPlayerVsComputer(std::vector<std::vector<char>>& player2Board, std::vector<std::vector<char>>& player2AttackedBoard, std::vector<std::vector<char>>& player1Board, std::vector<std::vector<char>>& player1AttackedBoard)
 {
+    constexpr bool isPlayingWithComputer = true;
     int copyPlayer1Ships[4];
     copyAvaibleShips(copyPlayer1Ships);
     int copyPlayer2Ships[4];
     copyAvaibleShips(copyPlayer2Ships);
     bool isPlayerTurn = true;
+    
     while (true)
     {
         if (isPlayerTurn) {
             cout << "Computer Board\n---------------------------------\n";
             printBoard(player2AttackedBoard);
             cout << "Player On Turn" << endl;
-            hitShip(player2Board, player2AttackedBoard, copyPlayer2Ships);
+            if (hitShip(player2Board, player2AttackedBoard, copyPlayer2Ships))
+            {
+                saveGame(player1Board, player2Board, player1AttackedBoard, player2AttackedBoard, isPlayerTurn, isPlayingWithComputer);
+                exit(0);
+            }
             printBoard(player2AttackedBoard);
             cout << "\033[1;31m" << "-----------------------------------" << "\033[0m" << endl;
             isPlayerTurn = false;
@@ -679,40 +770,64 @@ void playPlayerVsComputer(std::vector<std::vector<char>>& player2Board, std::vec
         }
     }
 }
-void playGame()
+void playGame(bool isLoadGame)
 {
+    if (isLoadGame) {
+        ifstream inFile("saved_game.txt");
+        bool isPlayer1Turn,isPlayingToComputer;
+        // Load information about the game state
+        inFile >> isPlayer1Turn;
+        inFile >> isPlayingToComputer;
+        int size;
+        inFile >> size;
+        vector<vector<char>> player1Board(size, vector<char>(size, '.'));
+        vector<vector<char>> player2Board(size, vector<char>(size, '.'));
+        vector<vector<char>> player1AttackedBoard(size, vector<char>(size, '.'));
+        vector<vector<char>> player2AttackedBoard(size, vector<char>(size, '.'));
+        // Load the matrices
+        loadMatrix(inFile, player1Board);
+        loadMatrix(inFile, player2Board);
+        loadMatrix(inFile, player1AttackedBoard);
+        loadMatrix(inFile, player2AttackedBoard);
 
-    const int BOARD_SIZE = enterBoardSize();
-    vector<vector<char>> player1Board(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
-    vector<vector<char>> player2Board(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
-    vector<vector<char>> player1AttackedBoard(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
-    vector<vector<char>> player2AttackedBoard(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
-    setShipCount(BOARD_SIZE);
-    int choice = chooseOpponent();
-    cout << "Player 1:" << endl;
-    chooseBoard(player1Board);
-    if (choice == 2) {
-
-        placeAllShipsRandomly(player2Board);
-        cout << "Player Board" << endl;
-        printBoard(player1Board);
-        playPlayerVsComputer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard);
+        // Close the file
+        inFile.close();
+        if (isPlayingToComputer) {
+            playPlayerVsComputer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard);
+        }
+        else {
+            playPlayerVsPlayer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard,isPlayer1Turn);
+        }
+      
     }
-    else if (choice == 1) {
-        cout << "Player 2:" << endl;
-        chooseBoard(player2Board);
-        printBoard(player1Board);
-        printBoard(player2Board);
-        playPlayerVsPlayer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard);
+    else {
+        const int BOARD_SIZE = enterBoardSize();
+        vector<vector<char>> player1Board(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
+        vector<vector<char>> player2Board(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
+        vector<vector<char>> player1AttackedBoard(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
+        vector<vector<char>> player2AttackedBoard(BOARD_SIZE, vector<char>(BOARD_SIZE, '.'));
+        setShipCount(BOARD_SIZE);
+        int choice = chooseOpponent();
+        cout << "Player 1:" << endl;
+        chooseBoard(player1Board);
+        if (choice == 2) {
+
+            placeAllShipsRandomly(player2Board);
+            cout << "Player Board" << endl;
+            printBoard(player1Board);
+            playPlayerVsComputer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard);
+        }
+        else if (choice == 1) {
+            cout << "Player 2:" << endl;
+            chooseBoard(player2Board);
+            printBoard(player1Board);
+            printBoard(player2Board);
+            playPlayerVsPlayer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard,true);
+        }
     }
     
-    printBoard(player1Board);
-    printBoard(player2Board);
-    printBoard(player1AttackedBoard);
     
 }
-
-
 
 /**
  * @brief Initiates the Battleships game by allowing the player to choose an opponent and board size.
@@ -723,6 +838,7 @@ void playGame()
 void StartUp()
 {
     srand(time(0));
+    bool isLoadGame = false;
     while (true)
     {
         cout << ">1. Play New Game: " << endl;
@@ -731,6 +847,11 @@ void StartUp()
         cout << ">5. Exit:" << endl;
         unsigned int option;
         cin >> option;
+        if (option == 2)
+        {
+            isLoadGame = true;
+            break;
+        }
         if (option == 5) return;
         else if (option == 3) printGameRules();
         else if (option == 1) break;
@@ -738,12 +859,10 @@ void StartUp()
             cout << "Incorrect Choice\n" << endl;
         }
     }
-    playGame();
+    playGame(isLoadGame);
 }
 int main()
 {
-    
     StartUp();
-
 }
 
