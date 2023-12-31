@@ -2,11 +2,9 @@
 //
 #include <iostream>
 #include <vector>
-#include <iomanip>
-#include <ctime>
-#include "BattleShip_FMI.h"
-#include "GameSetup.h"
-#include <fstream>
+#include <iomanip> // for setW()
+#include <ctime> // for random
+#include <fstream> // for files
 
 using namespace std;
 
@@ -102,12 +100,24 @@ void printGameRules() {
  */
 int chooseOpponent() {
     int choice;
-    cout << "Choose your opponent:\n";
-    cout << "1. Another Player\n";
-    cout << "2. Computer\n";
-    cout << "5. Exit\n";
-    cin >> choice;
-    if (choice == 5) exit(0);
+    while (true)
+    {
+     
+        cout << "Choose your opponent:\n";
+        cout << "1. Another Player\n";
+        cout << "2. Computer\n";
+        cout << "5. Exit\n";
+        cin >> choice;
+        if (choice == 5) exit(0);
+        if (choice != 1 && choice != 2)
+        {
+            cout << "Incorrect Choice"<<endl;
+        }
+        else {
+            break;
+        }
+    }
+    
     return choice;
 }
 /**
