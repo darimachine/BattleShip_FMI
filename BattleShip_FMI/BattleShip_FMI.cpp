@@ -35,7 +35,7 @@ void saveMatrix(ofstream& outFile, const vector<vector<char>>& matrix)
         for (int j = 0; j < rows; ++j) {
             outFile << matrix[i][j] << " ";
         }
-        outFile << std::endl;
+        outFile << endl;
     }
 }
 void loadMatrix(ifstream& inFile, vector<vector<char>>& matrix)
@@ -49,14 +49,14 @@ void loadMatrix(ifstream& inFile, vector<vector<char>>& matrix)
         }
     }
 }
-void saveGame(const std::vector<std::vector<char>>& player1Board,
-    const std::vector<std::vector<char>>& player2Board,
-    const std::vector<std::vector<char>>& player1AttackedBoard,
-    const std::vector<std::vector<char>>& player2AttackedBoard,
+void saveGame(const vector<vector<char>>& player1Board,
+    const vector<vector<char>>& player2Board,
+    const vector<vector<char>>& player1AttackedBoard,
+    const vector<vector<char>>& player2AttackedBoard,
     bool isPlayer1Turn,bool isPlayingToComputer)
 {
     // Open the file for writing
-    std::ofstream outFile("saved_game.txt");
+    ofstream outFile("saved_game.txt");
 
     // Save information about the game state
     outFile << isPlayer1Turn << std::endl;
