@@ -128,8 +128,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BattleShip_FMI.cpp" />
-    <ClCompile Include="GameSetup.cpp" />
-    <ClCompile Include="PlayerActions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BattleShip_FMI.h" />

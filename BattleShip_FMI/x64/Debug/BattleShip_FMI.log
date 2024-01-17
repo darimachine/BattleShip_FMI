@@ -4,7 +4,7 @@ C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\Battle
 C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(64,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(226,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(227,11): warning C4018: '>': signed/unsigned mismatch
-C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(227,24): warning C4018: '>': signed/unsigned mismatch
+C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(227,23): warning C4018: '>': signed/unsigned mismatch
 C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(232,23): warning C4018: '>': signed/unsigned mismatch
 C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(236,23): warning C4018: '>': signed/unsigned mismatch
 C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(366,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
@@ -14,5 +14,5 @@ C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\Battle
 C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(491,24): warning C4018: '<=': signed/unsigned mismatch
 C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(623,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(726,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(947,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\BattleShip_FMI\BattleShip_FMI.cpp(946,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   BattleShip_FMI.vcxproj -> C:\Users\Аз\Documents\VisulStudioProjects\BattleShip_FMI\x64\Debug\BattleShip_FMI.exe
