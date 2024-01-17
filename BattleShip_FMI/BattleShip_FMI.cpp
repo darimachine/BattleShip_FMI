@@ -1,11 +1,9 @@
-﻿// BattleShip_FMI.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+﻿
 #include <iostream>
-#include <vector>
+#include <vector> // vector
 #include <iomanip>
 #include <ctime>
-#include "BattleShip_FMI.h"
-#include "GameSetup.h"
+
 #include <fstream>
 
 using namespace std;
@@ -28,7 +26,7 @@ constexpr int ships[NUM_SHIP_TYPES] = { 2,3,4,5 }; // on index 0 equals ship 1 w
  * @brief An array representing the initial number of each ship type available to players.
  */
 int availableShips[NUM_SHIP_TYPES] = { 1,1,1,1 };
-//SAVING GAME
+/*Saving Game*/
 void saveMatrix(ofstream& outFile, const vector<vector<char>>& matrix)
 {
     int rows = matrix.size();
@@ -51,10 +49,10 @@ void loadMatrix(ifstream& inFile, vector<vector<char>>& matrix)
         }
     }
 }
-void saveGame(const std::vector<std::vector<char>>& player1Board,
-    const std::vector<std::vector<char>>& player2Board,
-    const std::vector<std::vector<char>>& player1AttackedBoard,
-    const std::vector<std::vector<char>>& player2AttackedBoard,
+void saveGame(const vector<vector<char>>& player1Board,
+    const vector<vector<char>>& player2Board,
+    const vector<vector<char>>& player1AttackedBoard,
+    const vector<vector<char>>& player2AttackedBoard,
     bool isPlayer1Turn,bool isPlayingToComputer)
 {
     // Open the file for writing
@@ -75,7 +73,7 @@ void saveGame(const std::vector<std::vector<char>>& player1Board,
     // Close the file
     outFile.close();
 }
-//-----------------------------
+
 void printGameRules() {
     cout << "**************************************************\n";
     cout << "              BATTLESHIPS - GAME RULES            \n";
@@ -102,12 +100,20 @@ void printGameRules() {
  */
 int chooseOpponent() {
     int choice;
-    cout << "Choose your opponent:\n";
-    cout << "1. Another Player\n";
-    cout << "2. Computer\n";
-    cout << "5. Exit\n";
-    cin >> choice;
-    if (choice == 5) exit(0);
+    while (true)
+    {
+        cout << "Choose your opponent:\n";
+        cout << "1. Another Player\n";
+        cout << "2. Computer\n";
+        cout << "5. Exit\n";
+        cin >> choice;
+        if (choice == 5) exit(0);
+        if (choice == 1 || choice == 2) break;
+        else {
+            cout << "Incorrect Input" << endl;
+        }
+    }
+    
     return choice;
 }
 /**
@@ -135,16 +141,18 @@ int enterBoardSize()
  */
 void printBoard(const vector<vector<char>> board)
 {
-    //cout << "  ";
+    cout << "    ";
     for (int i = 0; i < board.size(); i++)
     {
         //cout << i << "  ";
-        cout << setw(4) << i+1 ;
+        if (i < 8) cout << i + 1 << "   ";
+        else cout << i + 1 << "  ";
     }
     cout << endl;
     for (int i = 0; i < board.size(); i++)
     {
-        cout << i+1 << " ";
+        if (i < 9) cout << i + 1 << "  ";
+        else cout << i + 1 << " ";
         for (int j = 0; j < board.size(); j++)
         {
             if (board[i][j] == 'X') {
@@ -304,9 +312,9 @@ void placeShipWithUserInput(vector<vector<char>>& board, int choice)
         }
     }
 }
-void copyAvaibleShips(int* copy)
+void copyAvaibleShips(int * copy)
 {
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < NUM_SHIP_TYPES; i++)
     {
         copy[i] = availableShips[i];
     }
@@ -318,7 +326,7 @@ void copyAvaibleShips(int* copy)
  */
 void placeAllShipsOnBoard(vector<vector<char>> &board)
 {
-    int copy[4];
+    int copy[NUM_SHIP_TYPES];
     copyAvaibleShips(copy);
     while (getTotalRemainingShips(copy) != 0)
     {
@@ -340,8 +348,19 @@ void placeAllShipsOnBoard(vector<vector<char>> &board)
     printBoard(board);
 
     
-
 }
+/**
+ * @brief Checks if the specified coordinates are valid for an attack on the given attacked board.
+ *
+ * @param attackedBoard The board representing the attacked state.
+ * @param x The x-coordinate of the attack.
+ * @param y The y-coordinate of the attack.
+ * @return True if the coordinates are valid (not out of bounds and not already attacked), false otherwise.
+ *
+ * This function ensures that the attack coordinates (x, y) are within the bounds of the attacked board.
+ * Additionally, it checks whether the specified square has not been attacked before, i.e., it is not marked
+ * as 'X' (hit) or 'O' (missed). The function returns true if the coordinates are valid for an attack and false otherwise.
+ */
 bool isValidCoordinates(vector<vector<char>> attackedBoard, unsigned int x, unsigned int y)
 {
     int size = attackedBoard.size()-1;
@@ -407,8 +426,6 @@ void placeRandomShip(vector<vector<char>>& board, int choice)
             x = getRandomNumber(0, size-choice);
             y = getRandomNumber(0, size);
         }
-        // x = getRandomNumber(0,size-1)
-        // y = getRandomNumber(0,(size-1)-choice)
         if (canPlaceShip(board, choice, x, y, shipDirection))
         {
             addShipToBoard(board, choice, x, y, shipDirection);
@@ -431,7 +448,7 @@ void placeRandomShip(vector<vector<char>>& board, int choice)
 void placeAllShipsRandomly(vector<vector<char>> &board)
 {
     
-    int copy[4] = {};
+    int copy[NUM_SHIP_TYPES] = {};
     copyAvaibleShips(copy);
     while (getTotalRemainingShips(copy) != 0)
     {
@@ -459,8 +476,8 @@ void placeAllShipsRandomly(vector<vector<char>> &board)
 bool numberOfShipsLimit(int size)
 {
     const int LIMIT = size * size; /** < Maximum allowed number of ships is related to the total number of squares on the game board. */
-    unsigned totalShips = 0; //** Accumulator for the total number of ships */.
-    for (int i = 0; i < NUM_SHIP_TYPES; i++)  // Loop through each ship type and count the total number of ships.
+    unsigned totalShips = 0;
+    for (int i = 0; i < NUM_SHIP_TYPES; i++)  
     {
         for (int j = 0; j < availableShips[i]; j++)
         {
@@ -473,7 +490,16 @@ bool numberOfShipsLimit(int size)
     // Otherwise, return true, indicating that the user can add more ships.
     return (totalShips <= (LIMIT / 2));
 }
-void setShipCount(int boardSize)
+/**
+ * @brief Allows the player to choose whether to set the number of ships manually.
+ *
+ * This function prompts the player to decide whether they want to manually set the number of ships or use the default configuration.
+ * The default configuration includes 1 Patrol Boat (2 cells), 1 Submarine (3 cells), 1 Destroyer (4 cells), and 1 Aircraft Carrier (5 cells).
+ * The player can choose to customize the ship count or proceed with the default configuration.
+ *
+ * @return An integer representing the player's choice: 1 for manual ship count, 2 for default configuration.
+ */
+int chooseShipCount()
 {
     unsigned choice = 0;
     while (true)
@@ -486,7 +512,7 @@ void setShipCount(int boardSize)
         1 - Aircraft carrier(5 cells) \
         " << endl;
         cout << " 1) Yes\n 2) No\n";
-      
+
         cin >> choice;
         if (choice != 1 && choice != 2) {
             cout << "Incorrect Choice" << endl;
@@ -495,7 +521,22 @@ void setShipCount(int boardSize)
             break;
         }
     }
-    
+    return choice;
+}
+/**
+ * @brief Allows the player to customize the number of each type of ship on the board.
+ *
+ * @param boardSize The size of the game board.
+ *
+ * This function prompts the player whether they want to manually set the number of each ship type on the board.
+ * If the player chooses to customize, they can selectively increase the count of each ship type.
+ * The available counts for each ship type are displayed, and the player can choose which ship to add more of.
+ * The function ensures that the total number of ships does not exceed the limit for the given board size.
+ * The process continues until the player decides not to add more ships or reaches the limit.
+ */
+void setShipCount(int boardSize)
+{
+    unsigned choice = chooseShipCount();
     if (choice == 1)
     {
         while (true)
@@ -527,10 +568,15 @@ void setShipCount(int boardSize)
         }
         
     }
-    
-    return;
-
 }
+/**
+ * @brief Allows the player to choose how to set up their game board.
+ *
+ * This function prompts the player to decide whether they want to generate their game board automatically or manually.
+ * It then calls the appropriate function to place ships on the board based on the player's choice.
+ *
+ * @param board The game board to be populated with ships.
+ */
 void chooseBoard(vector<vector<char>> &board)
 {
     cout << "Do you want to generate Your Board Automaticly?"<<endl;
@@ -557,6 +603,17 @@ void chooseBoard(vector<vector<char>> &board)
     }
     
 }
+/**
+ * @brief Updates the status of sunk ships based on the player's attacks and updates available ships.
+ *
+ * This function iterates over the player and attacked boards to check the status of each ship type.
+ * It updates the counters for each ship type based on successful attacks and provides feedback if a ship is sunk.
+ * The function also updates the available ships array accordingly.
+ *
+ * @param playerBoard The opponent's game board containing ship locations.
+ * @param attackedBoard The board tracking attacks on the opponent's ships.
+ * @param copyAvailableShips An array tracking the available ships for the opponent.
+ */
 void sunkedShips(const vector<vector<char>> playerBoard, vector<vector<char>>& attackedBoard, int * copyAvaibleShips)
 {
     int counterPetrolBoat = 0;
@@ -608,6 +665,19 @@ void sunkedShips(const vector<vector<char>> playerBoard, vector<vector<char>>& a
     }
     
 }
+/**
+ * @brief Allows the player to choose coordinates to strike on the opponent's board in Battleships.
+ *
+ * This function prompts the player to input coordinates (x, y) for their attack.
+ * The input is validated, and the function returns true if the player chooses to save the game and exit.
+ * After a valid attack position is chosen, the function updates the attacked board and provides feedback
+ * on whether the attack resulted in a hit or a miss.
+ *
+ * @param playerBoard The opponent's game board containing ship locations.
+ * @param attackedBoard The board tracking attacks on the opponent's ships.
+ * @param copyAvailableShips An array tracking the available ships for the opponent.
+ * @return True if the player chooses to save the game and exit, false otherwise.
+ */
 bool hitShip(const vector<vector<char>> playerBoard, vector<vector<char>> &attackedBoard,int * copyAvailableShips)
 {
     
@@ -640,6 +710,17 @@ bool hitShip(const vector<vector<char>> playerBoard, vector<vector<char>> &attac
     }
     return false;
 }
+/**
+ * @brief Simulates a random attack by the computer on the player's board in Battleships.
+ *
+ * This function randomly selects coordinates on the player's board to launch an attack.
+ * It checks if the coordinates are valid and updates the attacked board accordingly.
+ * It also provides feedback on whether the attack resulted in a hit or a miss.
+ *
+ * @param playerBoard The player's game board containing ship locations.
+ * @param attackedBoard The board tracking attacks on the player's ships.
+ * @param copyAvailableShips An array tracking the available ships for the player.
+ */
 void hitShipRandomly(const vector<vector<char>> playerBoard, vector<vector<char>>& attackedBoard, int* copyAvailableShips)
 {
     int size = playerBoard.size() - 1;
@@ -666,14 +747,27 @@ void hitShipRandomly(const vector<vector<char>> playerBoard, vector<vector<char>
         sunkedShips(playerBoard, attackedBoard, copyAvailableShips);
     }
 }
+/**
+ * @brief Manages the gameplay for a Player vs. Player match in Battleships.
+ *
+ * This function handles the turn-by-turn interactions between two players,
+ * allowing them to attack each other's boards. It incorporates logic for hitting
+ * ships, displaying boards, saving the game, and checking for game-over conditions.
+ *
+ * @param player2Board The game board for Player 2.
+ * @param player2AttackedBoard The attacked board for Player 2.
+ * @param player1Board The game board for Player 1.
+ * @param player1AttackedBoard The attacked board for Player 1.
+ * @param isPlayer1Turn A flag indicating whether it is Player 1's turn.
+ */
 void playPlayerVsPlayer(vector<vector<char>>& player2Board,vector<vector<char>>& player2AttackedBoard, vector<vector<char>>& player1Board,
     vector<vector<char>>& player1AttackedBoard,bool isPlayer1Turn)
 {
     constexpr bool isPlayingWithComputer = false;
     /* Saving the avaible ships in the board. After that keeping track which one was sank*/
-    int copyPlayer1Ships[4];
+    int copyPlayer1Ships[NUM_SHIP_TYPES];
     copyAvaibleShips(copyPlayer1Ships); 
-    int copyPlayer2Ships[4];
+    int copyPlayer2Ships[NUM_SHIP_TYPES];
     copyAvaibleShips(copyPlayer2Ships);
     
     while (true)
@@ -714,25 +808,36 @@ void playPlayerVsPlayer(vector<vector<char>>& player2Board,vector<vector<char>>&
             
             exit(0);
         }
-
     }
 }
+/**
+ * @brief Manages the gameplay for a Player vs. Computer match in Battleships.
+ *
+ * This function handles the turn-by-turn interactions between the player and
+ * the computer, allowing them to attack each other's boards. It incorporates
+ * logic for hitting ships, displaying boards, saving the game, and checking for
+ * game-over conditions.
+ *
+ * @param player2Board The computer's game board.
+ * @param player2AttackedBoard The computer's attacked board.
+ * @param player1Board The player's game board.
+ * @param player1AttackedBoard The player's attacked board.
+ */
 void playPlayerVsComputer(std::vector<std::vector<char>>& player2Board, std::vector<std::vector<char>>& player2AttackedBoard, std::vector<std::vector<char>>& player1Board, std::vector<std::vector<char>>& player1AttackedBoard)
 {
     constexpr bool isPlayingWithComputer = true;
-    int copyPlayer1Ships[4];
+    int copyPlayer1Ships[NUM_SHIP_TYPES];
     copyAvaibleShips(copyPlayer1Ships);
-    int copyPlayer2Ships[4];
-    copyAvaibleShips(copyPlayer2Ships);
+    int copyComputerShips[NUM_SHIP_TYPES];
+    copyAvaibleShips(copyComputerShips);
     bool isPlayerTurn = true;
-    
     while (true)
     {
         if (isPlayerTurn) {
             cout << "Computer Board\n---------------------------------\n";
             printBoard(player2AttackedBoard);
             cout << "Player On Turn" << endl;
-            if (hitShip(player2Board, player2AttackedBoard, copyPlayer2Ships))
+            if (hitShip(player2Board, player2AttackedBoard, copyComputerShips))
             {
                 saveGame(player1Board, player2Board, player1AttackedBoard, player2AttackedBoard, isPlayerTurn, isPlayingWithComputer);
                 exit(0);
@@ -761,6 +866,17 @@ void playPlayerVsComputer(std::vector<std::vector<char>>& player2Board, std::vec
         }
     }
 }
+/**
+ * @brief Initiates and manages the execution of the Battleships game.
+ *
+ * This function handles the flow of the Battleships game, allowing players
+ * to either start a new game or load a previously saved one. It manages the
+ * game state, boards, and player turns by calling appropriate helper functions.
+ *
+ * @param isLoadGame A boolean flag indicating whether to load a saved game.
+ *                   If true, the function loads the game state from a file.
+ *                   If false, it initiates a new game with user inputs.
+ */
 void playGame(bool isLoadGame)
 {
     if (isLoadGame) {

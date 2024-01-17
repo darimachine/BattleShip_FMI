@@ -10,6 +10,7 @@ using namespace std;
 void printGameRules();
 int chooseOpponent();
 int enterBoardSize();
+void chooseShipCount(unsigned int& choice);
 void setShipCount(int boardSize);
 void chooseBoard(std::vector<std::vector<char>>& board);
 void StartUp();
