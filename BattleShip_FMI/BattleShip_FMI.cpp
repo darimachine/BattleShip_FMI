@@ -1,4 +1,4 @@
-﻿
+
 #include <iostream>
 #include <vector> // vector
 #include <iomanip>
@@ -53,7 +53,7 @@ void saveGame(const vector<vector<char>>& player1Board,
     const vector<vector<char>>& player2Board,
     const vector<vector<char>>& player1AttackedBoard,
     const vector<vector<char>>& player2AttackedBoard,
-    bool isPlayer1Turn,bool isPlayingToComputer)
+    bool isPlayer1Turn, bool isPlayingToComputer)
 {
     // Open the file for writing
     std::ofstream outFile("saved_game.txt");
@@ -113,7 +113,7 @@ int chooseOpponent() {
             cout << "Incorrect Input" << endl;
         }
     }
-    
+
     return choice;
 }
 /**
@@ -124,13 +124,13 @@ int enterBoardSize()
 {
     const int MIN_BOARD_SIZE = 6;
     const int MAX_BOARD_SIZE = 10;
-    cout << "Choose Board Size Between 6 and 10"<<endl;
-    int choice=0;
+    cout << "Choose Board Size Between 6 and 10" << endl;
+    int choice = 0;
     cin >> choice;
     while (choice < MIN_BOARD_SIZE || choice>MAX_BOARD_SIZE)
     {
         cout << "Incorrect Size| Enter New Size" << endl;
-        
+
         cin >> choice;
     }
     return choice;
@@ -166,7 +166,7 @@ void printBoard(const vector<vector<char>> board)
             else {
                 cout << "[" << board[i][j] << "] ";
             }
-            
+
         }
         cout << endl;
     }
@@ -196,19 +196,19 @@ void displayAvailableShips(const int howManyShips[])
 {
     if (howManyShips[0] != 0)
     {
-        cout << "1) - Patrol Boat (2) Spaces (P)" << setw(2)<<"(" << howManyShips[0] << " left)" << endl;
+        cout << "1) - Patrol Boat (2) Spaces (P)" << setw(2) << "(" << howManyShips[0] << " left)" << endl;
     }
     if (howManyShips[1] != 0)
     {
-        cout << "2) - Submarine (3) Spaces (S)" <<setw(2) << "(" << howManyShips[1] << " left)" << endl;
+        cout << "2) - Submarine (3) Spaces (S)" << setw(2) << "(" << howManyShips[1] << " left)" << endl;
     }
     if (howManyShips[2] != 0)
     {
-        cout << "3) - Destroyer (4) Spaces (D)" <<setw(2) << "(" << howManyShips[2] << " left)" << endl;
+        cout << "3) - Destroyer (4) Spaces (D)" << setw(2) << "(" << howManyShips[2] << " left)" << endl;
     }
     if (howManyShips[3] != 0)
     {
-        cout << "4) - Aircraft carrier (5) Spaces (A)" <<setw(2)<<"(" << howManyShips[3] << " left)" << endl;
+        cout << "4) - Aircraft carrier (5) Spaces (A)" << setw(2) << "(" << howManyShips[3] << " left)" << endl;
     }
 }
 /**
@@ -221,24 +221,24 @@ void displayAvailableShips(const int howManyShips[])
  * @param direction The direction of the ship (1 for horizontal, 2 for vertical).
  * @return True if the ship can be placed; false otherwise.
  */
-bool canPlaceShip(const vector<vector<char>> board,int choice, unsigned int x, unsigned int y, unsigned int direction)
+bool canPlaceShip(const vector<vector<char>> board, int choice, unsigned int x, unsigned int y, unsigned int direction)
 {
-    int size = board.size()-1;
-    if (x > size  || y > size) return false;
+    int size = board.size() - 1;
+    if (x > size || y > size) return false;
     for (int i = 0; i < ships[choice]; i++)
     {
         if (direction == 1)
         {
-            if (y + i > size || board[x][y + i] != '.' ) return false;
+            if (y + i > size || board[x][y + i] != '.') return false;
         }
         else if (direction == 2)
         {
-            if (x + i > size ||board[x+i][y] != '.') return false;
+            if (x + i > size || board[x + i][y] != '.') return false;
         }
     }
     return true;
 
-    
+
 }
 /**
  * @brief Adds a ship to the game board at the specified position and direction.
@@ -249,12 +249,12 @@ bool canPlaceShip(const vector<vector<char>> board,int choice, unsigned int x, u
  * @param startY The starting y-coordinate for placing the ship.
  * @param direction The direction of the ship (1 for horizontal, 2 for vertical).
  */
-void addShipToBoard(vector<vector<char>> &board, int choice, unsigned int x, unsigned int y, unsigned int direction)
+void addShipToBoard(vector<vector<char>>& board, int choice, unsigned int x, unsigned int y, unsigned int direction)
 {
     char shipName = ' ';
     if (choice == 0) shipName = 'P';
-    if (choice == 1) shipName='S';
-    if (choice == 2) shipName='D';
+    if (choice == 1) shipName = 'S';
+    if (choice == 2) shipName = 'D';
     if (choice == 3) shipName = 'A';
     if (direction == 1)
     {
@@ -267,7 +267,7 @@ void addShipToBoard(vector<vector<char>> &board, int choice, unsigned int x, uns
     {
         for (int i = 0; i < ships[choice]; i++)
         {
-            board[x+i][y] = shipName;
+            board[x + i][y] = shipName;
         }
     }
 
@@ -280,7 +280,7 @@ void addShipToBoard(vector<vector<char>> &board, int choice, unsigned int x, uns
  */
 void placeShipWithUserInput(vector<vector<char>>& board, int choice)
 {
-    
+
     while (true)
     {
         cout << "Will your ship be HORIZONTAL or VERCITAL from your starting point?" << endl;
@@ -290,29 +290,29 @@ void placeShipWithUserInput(vector<vector<char>>& board, int choice)
         cin >> shipDirection;
         if (shipDirection != 1 && shipDirection != 2)
         {
-            cout << "Incorrect Choice"<<endl;
+            cout << "Incorrect Choice" << endl;
             continue;
         }
         unsigned int x = 0;
         unsigned int y = 0;
-        cout << "Enter Starting Point (x, y) ("<<1<<", "<< board.size() << ")" << endl;
+        cout << "Enter Starting Point (x, y) (" << 1 << ", " << board.size() << ")" << endl;
         cin >> x;
         cin >> y;
         x--;
         y--;
-        if (canPlaceShip(board, choice, x, y, shipDirection)) 
+        if (canPlaceShip(board, choice, x, y, shipDirection))
         {
             addShipToBoard(board, choice, x, y, shipDirection);
             break;
         }
         else {
-            cout << "You cannot place ship there!!!"<<endl;
+            cout << "You cannot place ship there!!!" << endl;
             continue;
 
         }
     }
 }
-void copyAvaibleShips(int * copy)
+void copyAvaibleShips(int* copy)
 {
     for (int i = 0; i < NUM_SHIP_TYPES; i++)
     {
@@ -324,22 +324,22 @@ void copyAvaibleShips(int * copy)
  *
  * @param board The game board represented as a 2D vector.
  */
-void placeAllShipsOnBoard(vector<vector<char>> &board)
+void placeAllShipsOnBoard(vector<vector<char>>& board)
 {
     int copy[NUM_SHIP_TYPES];
     copyAvaibleShips(copy);
     while (getTotalRemainingShips(copy) != 0)
     {
-        
+
         cout << "Which ship would you like to place?" << endl;
         printBoard(board);
         displayAvailableShips(copy);
         unsigned int choice = 0;
         cin >> choice;
         choice--; // I remove 1 because i dont want player to enter 0 as an choice of ship
-        if (choice > 3 || copy[choice]==0)
+        if (choice > 3 || copy[choice] == 0)
         {
-            cout << "Incorrect Choice!!"<<endl;
+            cout << "Incorrect Choice!!" << endl;
             continue;
         }
         copy[choice]--;
@@ -347,7 +347,7 @@ void placeAllShipsOnBoard(vector<vector<char>> &board)
     }
     printBoard(board);
 
-    
+
 }
 /**
  * @brief Checks if the specified coordinates are valid for an attack on the given attacked board.
@@ -363,7 +363,7 @@ void placeAllShipsOnBoard(vector<vector<char>> &board)
  */
 bool isValidCoordinates(vector<vector<char>> attackedBoard, unsigned int x, unsigned int y)
 {
-    int size = attackedBoard.size()-1;
+    int size = attackedBoard.size() - 1;
     if (x > size || y > size) return false;
     if (attackedBoard[x][y] == 'X' || attackedBoard[x][y] == 'O') return false;
     return true;
@@ -390,10 +390,10 @@ bool isGameOver(vector<vector<char>> playerBoard, vector<vector<char>> attackedB
     return true;
 }
 
- /* @brief Generate a random number between minand max
- * @param Takes Min And Max
- * @return Return Random Number Between Min And Max
- */
+/* @brief Generate a random number between minand max
+* @param Takes Min And Max
+* @return Return Random Number Between Min And Max
+*/
 int getRandomNumber(int min, int max) {
     return min + rand() % (max - min + 1);
 }
@@ -423,7 +423,7 @@ void placeRandomShip(vector<vector<char>>& board, int choice)
         }
         else if (shipDirection == 2)
         {
-            x = getRandomNumber(0, size-choice);
+            x = getRandomNumber(0, size - choice);
             y = getRandomNumber(0, size);
         }
         if (canPlaceShip(board, choice, x, y, shipDirection))
@@ -445,9 +445,9 @@ void placeRandomShip(vector<vector<char>>& board, int choice)
  *
  * @param board The game board represented as a 2D vector.
  */
-void placeAllShipsRandomly(vector<vector<char>> &board)
+void placeAllShipsRandomly(vector<vector<char>>& board)
 {
-    
+
     int copy[NUM_SHIP_TYPES] = {};
     copyAvaibleShips(copy);
     while (getTotalRemainingShips(copy) != 0)
@@ -461,7 +461,7 @@ void placeAllShipsRandomly(vector<vector<char>> &board)
         placeRandomShip(board, choice);
         //printBoard(board);
     }
-  
+
 }
 /**
  * @brief Validates the maximum number of ships based on the size of the game board.
@@ -477,7 +477,7 @@ bool numberOfShipsLimit(int size)
 {
     const int LIMIT = size * size; /** < Maximum allowed number of ships is related to the total number of squares on the game board. */
     unsigned totalShips = 0;
-    for (int i = 0; i < NUM_SHIP_TYPES; i++)  
+    for (int i = 0; i < NUM_SHIP_TYPES; i++)
     {
         for (int j = 0; j < availableShips[i]; j++)
         {
@@ -541,7 +541,7 @@ void setShipCount(int boardSize)
     {
         while (true)
         {
-            
+
             cout << "Which boat you want to increase\n";
             cout << "1) - Patrol Boat (2) Spaces (P)" << setw(2) << "(" << availableShips[0] << " left)" << endl;
             cout << "2) - Submarine (3) Spaces (S)" << setw(2) << "(" << availableShips[1] << " left)" << endl;
@@ -566,7 +566,7 @@ void setShipCount(int boardSize)
                 break;
             }
         }
-        
+
     }
 }
 /**
@@ -577,9 +577,9 @@ void setShipCount(int boardSize)
  *
  * @param board The game board to be populated with ships.
  */
-void chooseBoard(vector<vector<char>> &board)
+void chooseBoard(vector<vector<char>>& board)
 {
-    cout << "Do you want to generate Your Board Automaticly?"<<endl;
+    cout << "Do you want to generate Your Board Automaticly?" << endl;
     cout << "1) Yes" << endl;
     cout << "2) No" << endl;
     unsigned int choice = 0;
@@ -601,7 +601,7 @@ void chooseBoard(vector<vector<char>> &board)
             cin >> choice;
         }
     }
-    
+
 }
 /**
  * @brief Updates the status of sunk ships based on the player's attacks and updates available ships.
@@ -614,7 +614,7 @@ void chooseBoard(vector<vector<char>> &board)
  * @param attackedBoard The board tracking attacks on the opponent's ships.
  * @param copyAvailableShips An array tracking the available ships for the opponent.
  */
-void sunkedShips(const vector<vector<char>> playerBoard, vector<vector<char>>& attackedBoard, int * copyAvaibleShips)
+void sunkedShips(const vector<vector<char>> playerBoard, vector<vector<char>>& attackedBoard, int* copyAvaibleShips)
 {
     int counterPetrolBoat = 0;
     int counterSubMarine = 0;
@@ -645,7 +645,7 @@ void sunkedShips(const vector<vector<char>> playerBoard, vector<vector<char>>& a
     }
     if (counterPetrolBoat == ships[0])
     {
-        cout << "\033[1;31m" << "You Sank Enemy Patrol Boat" << "\033[0m" <<endl;
+        cout << "\033[1;31m" << "You Sank Enemy Patrol Boat" << "\033[0m" << endl;
         copyAvaibleShips[0]--;
     }
     if (counterSubMarine == ships[1])
@@ -663,7 +663,7 @@ void sunkedShips(const vector<vector<char>> playerBoard, vector<vector<char>>& a
         cout << "\033[1;31m" << "You Sank Enemy AirCraft" << "\033[0m" << endl;
         copyAvaibleShips[3]--;
     }
-    
+
 }
 /**
  * @brief Allows the player to choose coordinates to strike on the opponent's board in Battleships.
@@ -678,9 +678,9 @@ void sunkedShips(const vector<vector<char>> playerBoard, vector<vector<char>>& a
  * @param copyAvailableShips An array tracking the available ships for the opponent.
  * @return True if the player chooses to save the game and exit, false otherwise.
  */
-bool hitShip(const vector<vector<char>> playerBoard, vector<vector<char>> &attackedBoard,int * copyAvailableShips)
+bool hitShip(const vector<vector<char>> playerBoard, vector<vector<char>>& attackedBoard, int* copyAvailableShips)
 {
-    
+
     int x, y;
     while (true)
     {
@@ -689,23 +689,23 @@ bool hitShip(const vector<vector<char>> playerBoard, vector<vector<char>> &attac
         if (x == 99 && y == 99) return true;
         x--;
         y--;
-        if (!isValidCoordinates(attackedBoard, x, y)) 
+        if (!isValidCoordinates(attackedBoard, x, y))
         {
             cout << "Incorrect square to Strike!! Try Again" << endl;
             continue;
         }
         break;
-        
+
     }
     if (playerBoard[x][y] == '.') {
         attackedBoard[x][y] = 'O';
-        cout << "\033[1;33m" << "You Missed" << "\033[0m"<<endl;
-      
+        cout << "\033[1;33m" << "You Missed" << "\033[0m" << endl;
+
     }
     else {
         attackedBoard[x][y] = 'X';
-        cout << "\033[1;34m" << "You Hit" << "\033[0m"<<endl;
-       
+        cout << "\033[1;34m" << "You Hit" << "\033[0m" << endl;
+
         sunkedShips(playerBoard, attackedBoard, copyAvailableShips);
     }
     return false;
@@ -760,16 +760,15 @@ void hitShipRandomly(const vector<vector<char>> playerBoard, vector<vector<char>
  * @param player1AttackedBoard The attacked board for Player 1.
  * @param isPlayer1Turn A flag indicating whether it is Player 1's turn.
  */
-void playPlayerVsPlayer(vector<vector<char>>& player2Board,vector<vector<char>>& player2AttackedBoard, vector<vector<char>>& player1Board,
-    vector<vector<char>>& player1AttackedBoard,bool isPlayer1Turn)
+void playPlayerVsPlayer(vector<vector<char>>& player2Board, vector<vector<char>>& player2AttackedBoard, vector<vector<char>>& player1Board,
+    vector<vector<char>>& player1AttackedBoard, bool isPlayer1Turn)
 {
     constexpr bool isPlayingWithComputer = false;
     /* Saving the avaible ships in the board. After that keeping track which one was sank*/
     int copyPlayer1Ships[NUM_SHIP_TYPES];
-    copyAvaibleShips(copyPlayer1Ships); 
+    copyAvaibleShips(copyPlayer1Ships);
     int copyPlayer2Ships[NUM_SHIP_TYPES];
     copyAvaibleShips(copyPlayer2Ships);
-    
     while (true)
     {
         if (isPlayer1Turn)
@@ -784,7 +783,7 @@ void playPlayerVsPlayer(vector<vector<char>>& player2Board,vector<vector<char>>&
             }
             isPlayer1Turn = false;
             printBoard(player2AttackedBoard);
-            cout << "\033[1;31m" <<"-----------------------------------"<< "\033[0m"<<endl;
+            cout << "\033[1;31m" << "-----------------------------------" << "\033[0m" << endl;
         }
         else {
             cout << "Player 1 Board\n---------------------------------\n";
@@ -797,7 +796,7 @@ void playPlayerVsPlayer(vector<vector<char>>& player2Board,vector<vector<char>>&
             }
             isPlayer1Turn = true;
             printBoard(player1AttackedBoard);
-            cout << "\033[1;31m" << "-----------------------------------" << "\033[0m"<<endl;
+            cout << "\033[1;31m" << "-----------------------------------" << "\033[0m" << endl;
         }
         if (isGameOver(player1Board, player1AttackedBoard)) {
             cout << "\033[1;32m" << "Player 2 WON" << "\033[0m";
@@ -805,7 +804,7 @@ void playPlayerVsPlayer(vector<vector<char>>& player2Board,vector<vector<char>>&
         }
         if (isGameOver(player2Board, player2AttackedBoard)) {
             cout << "\033[1;32m" << "Player 1 WON" << "\033[0m";
-            
+
             exit(0);
         }
     }
@@ -850,7 +849,7 @@ void playPlayerVsComputer(std::vector<std::vector<char>>& player2Board, std::vec
             /*cout << "Player Board\n--------------------------" << endl;
             printBoard(player1Board);*/
             cout << "Computer On Turn" << endl;
-            hitShipRandomly (player1Board, player1AttackedBoard, copyPlayer1Ships);
+            hitShipRandomly(player1Board, player1AttackedBoard, copyPlayer1Ships);
             printBoard(player1AttackedBoard);
             cout << "\033[1;31m" << "-----------------------------------" << "\033[0m" << endl;
             isPlayerTurn = true;
@@ -881,7 +880,7 @@ void playGame(bool isLoadGame)
 {
     if (isLoadGame) {
         ifstream inFile("saved_game.txt");
-        bool isPlayer1Turn,isPlayingToComputer;
+        bool isPlayer1Turn, isPlayingToComputer;
         // Load information about the game state
         inFile >> isPlayer1Turn;
         inFile >> isPlayingToComputer;
@@ -903,9 +902,9 @@ void playGame(bool isLoadGame)
             playPlayerVsComputer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard);
         }
         else {
-            playPlayerVsPlayer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard,isPlayer1Turn);
+            playPlayerVsPlayer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard, isPlayer1Turn);
         }
-      
+
     }
     else {
         const int BOARD_SIZE = enterBoardSize();
@@ -929,11 +928,11 @@ void playGame(bool isLoadGame)
             chooseBoard(player2Board);
             printBoard(player1Board);
             printBoard(player2Board);
-            playPlayerVsPlayer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard,true);
+            playPlayerVsPlayer(player2Board, player2AttackedBoard, player1Board, player1AttackedBoard, true);
         }
     }
-    
-    
+
+
 }
 
 /**
