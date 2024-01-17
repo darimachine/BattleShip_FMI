@@ -24,7 +24,7 @@ constexpr int NUM_SHIP_TYPES = 4;
 constexpr int ships[NUM_SHIP_TYPES] = { 2,3,4,5 }; // on index 0 equals ship 1 which is Boat and etc..
 /**
  * @brief An array representing the initial number of each ship type available to players.
- */
+*/
 int availableShips[NUM_SHIP_TYPES] = { 1,1,1,1 };
 /*Saving Game*/
 void saveMatrix(ofstream& outFile, const vector<vector<char>>& matrix)
