@@ -3,7 +3,6 @@
 #include <vector> // vector
 #include <iomanip>
 #include <ctime>
-
 #include <fstream>
 
 using namespace std;
@@ -26,6 +25,14 @@ constexpr int ships[NUM_SHIP_TYPES] = { 2,3,4,5 }; // on index 0 equals ship 1 w
  * @brief An array representing the initial number of each ship type available to players.
 */
 int availableShips[NUM_SHIP_TYPES] = { 1,1,1,1 };
+/*
+ Validating for letter input
+*/
+void validateForLetter()
+{
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // validara za bukva
+}
 /*Saving Game*/
 void saveMatrix(ofstream& outFile, const vector<vector<char>>& matrix)
 {
@@ -111,6 +118,7 @@ int chooseOpponent() {
         if (choice == 1 || choice == 2) break;
         else {
             cout << "Incorrect Input" << endl;
+            validateForLetter();
         }
     }
 
@@ -130,7 +138,7 @@ int enterBoardSize()
     while (choice < MIN_BOARD_SIZE || choice>MAX_BOARD_SIZE)
     {
         cout << "Incorrect Size| Enter New Size" << endl;
-
+        validateForLetter();
         cin >> choice;
     }
     return choice;
@@ -291,6 +299,7 @@ void placeShipWithUserInput(vector<vector<char>>& board, int choice)
         if (shipDirection != 1 && shipDirection != 2)
         {
             cout << "Incorrect Choice" << endl;
+            validateForLetter();
             continue;
         }
         unsigned int x = 0;
@@ -307,6 +316,7 @@ void placeShipWithUserInput(vector<vector<char>>& board, int choice)
         }
         else {
             cout << "You cannot place ship there!!!" << endl;
+            validateForLetter();
             continue;
 
         }
@@ -340,6 +350,7 @@ void placeAllShipsOnBoard(vector<vector<char>>& board)
         if (choice > 3 || copy[choice] == 0)
         {
             cout << "Incorrect Choice!!" << endl;
+            validateForLetter();
             continue;
         }
         copy[choice]--;
@@ -421,6 +432,7 @@ void placeRandomShip(vector<vector<char>>& board, int choice)
             x = getRandomNumber(0, size);
             y = getRandomNumber(0, size - choice);
         }
+        //vertical
         else if (shipDirection == 2)
         {
             x = getRandomNumber(0, size - choice);
@@ -516,6 +528,7 @@ int chooseShipCount()
         cin >> choice;
         if (choice != 1 && choice != 2) {
             cout << "Incorrect Choice" << endl;
+            validateForLetter();
         }
         else {
             break;
@@ -598,6 +611,7 @@ void chooseBoard(vector<vector<char>>& board)
         }
         else {
             cout << "Incorrect Input" << endl;
+            validateForLetter();
             cin >> choice;
         }
     }
@@ -692,6 +706,7 @@ bool hitShip(const vector<vector<char>> playerBoard, vector<vector<char>>& attac
         if (!isValidCoordinates(attackedBoard, x, y))
         {
             cout << "Incorrect square to Strike!! Try Again" << endl;
+            validateForLetter();
             continue;
         }
         break;
@@ -963,6 +978,7 @@ void StartUp()
         else if (option == 1) break;
         else {
             cout << "Incorrect Choice\n" << endl;
+            validateForLetter();
         }
     }
     playGame(isLoadGame);

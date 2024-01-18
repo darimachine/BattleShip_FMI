@@ -23,14 +23,5 @@
     <ClInclude Include="BattleShip_FMI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameSetup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerActions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameLogic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
