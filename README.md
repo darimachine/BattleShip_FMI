@@ -46,13 +46,15 @@ To start the Battleships game, follow the steps below:
   <details>
        <summary> Click to see the Picture</summary>
     
-        ![Ship Count](https://github.com/darimachine/BattleShip_FMI/assets/67830778/170ca9a0-d096-47bf-87ea-daed60b60278)
+  ![Ship Count](https://github.com/darimachine/BattleShip_FMI/assets/67830778/170ca9a0-d096-47bf-87ea-daed60b60278)
+  
   </details>
 
   <details>
        <summary> Click to see the Picture</summary>
     
     ![Increase Ship Count](https://github.com/darimachine/BattleShip_FMI/assets/67830778/3847e0d0-061c-405c-bfde-afaed9e4409c)
+  
   </details>
 
 ### Choosing the Opponent
@@ -61,7 +63,8 @@ To start the Battleships game, follow the steps below:
   <details>
        <summary> Click to see the Picture</summary>
     
-      ![Choose Opponent](https://github.com/darimachine/BattleShip_FMI/assets/67830778/d3f3f4a9-9b0e-4b62-b354-8296dda76513)
+  ![Choose Opponent](https://github.com/darimachine/BattleShip_FMI/assets/67830778/d3f3f4a9-9b0e-4b62-b354-8296dda76513)
+  
   </details>
   
 - **Automatic Board Generation:** After choosing, it asks you whether to generate the board automatically:
@@ -69,7 +72,7 @@ To start the Battleships game, follow the steps below:
  <details>
        <summary> Click to see the Picture</summary>
    
-    ![Generate Board](https://github.com/darimachine/BattleShip_FMI/assets/67830778/5668c329-71c9-4bd0-bc7f-e76cb2e05bd4)
+  ![Generate Board](https://github.com/darimachine/BattleShip_FMI/assets/67830778/5668c329-71c9-4bd0-bc7f-e76cb2e05bd4)
     
   </details>  
 
@@ -77,13 +80,15 @@ To start the Battleships game, follow the steps below:
   <details>
        <summary> Click to see the Picture</summary>
     
-    ![Ships and Board](https://github.com/darimachine/BattleShip_FMI/assets/67830778/3051edfc-1eb9-4365-8ed3-91408e91b9e8)
+  ![Ships and Board](https://github.com/darimachine/BattleShip_FMI/assets/67830778/3051edfc-1eb9-4365-8ed3-91408e91b9e8)
+  
   </details>
 
   <details>
        <summary> Click to see the Picture</summary>
     
-      ![Board State](https://github.com/darimachine/BattleShip_FMI/assets/67830778/948df0eb-afcc-435d-8588-5cbfcdae1bb1)
+  ![Board State](https://github.com/darimachine/BattleShip_FMI/assets/67830778/948df0eb-afcc-435d-8588-5cbfcdae1bb1)
+  
   </details>
 
 ### Playing the Game
@@ -92,7 +97,8 @@ To start the Battleships game, follow the steps below:
   <details>
        <summary> Click to see the Picture</summary>
     
-      ![Player's Board](https://github.com/darimachine/BattleShip_FMI/assets/67830778/77cdcc4c-c787-411c-829c-488d755dae1a)
+  ![Player's Board](https://github.com/darimachine/BattleShip_FMI/assets/67830778/77cdcc4c-c787-411c-829c-488d755dae1a)
+  
   </details>
 
 - **Game Moves:** When Player 1 makes a move and hits, it provides information on whether it's a hit or miss and changes the color to red for a hit and green for a miss:
@@ -100,13 +106,15 @@ To start the Battleships game, follow the steps below:
   <details>
        <summary> Click to see the Picture</summary>
     
-      ![Hit Move](https://github.com/darimachine/BattleShip_FMI/assets/67830778/99a42107-4940-48e8-974c-af46562fbc1f)
+  ![Hit Move](https://github.com/darimachine/BattleShip_FMI/assets/67830778/99a42107-4940-48e8-974c-af46562fbc1f)
+  
   </details>
 
   <details>
        <summary> Click to see the Picture</summary>
     
-      ![Miss Move](https://github.com/darimachine/BattleShip_FMI/assets/67830778/3024ca37-3e24-4cdc-8f9e-3d414fd6169b)
+  ![Miss Move](https://github.com/darimachine/BattleShip_FMI/assets/67830778/3024ca37-3e24-4cdc-8f9e-3d414fd6169b)
+  
   </details>
 
 - **Game Continuation:** The game continues until all ships of one player are sunk.
