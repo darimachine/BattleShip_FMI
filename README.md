@@ -24,9 +24,9 @@ Battleships is a classic strategy game where players take turns to attack each o
 
 To start the Battleships game, follow the steps below:
 
-### Play Game
+## Play Game
 
-#### Entering the Game
+### Entering the Game
 
 - **After Choosing to Play:** You will be prompted to enter the board size (let's assume it is 8):
   <details>
@@ -55,7 +55,7 @@ To start the Battleships game, follow the steps below:
     ![Increase Ship Count](https://github.com/darimachine/BattleShip_FMI/assets/67830778/3847e0d0-061c-405c-bfde-afaed9e4409c)
   </details>
 
-#### Choosing the Opponent
+### Choosing the Opponent
 
 - **Choose Your Opponent:** Decide whether to play against another player or the computer:
   <details>
@@ -86,7 +86,7 @@ To start the Battleships game, follow the steps below:
       ![Board State](https://github.com/darimachine/BattleShip_FMI/assets/67830778/948df0eb-afcc-435d-8588-5cbfcdae1bb1)
   </details>
 
-#### Playing the Game
+### Playing the Game
 
 - **Game Initialization:** After generating the board, it will display the player's board (for informational purposes) and ask Player 1 to start striking:
   <details>
@@ -138,6 +138,6 @@ Nice Looking User Interface
 Notifies user when some ship is sank
 
 ```
-### Author
+## Author
 
 - [@darimachine](https://www.github.com/darimachine)
