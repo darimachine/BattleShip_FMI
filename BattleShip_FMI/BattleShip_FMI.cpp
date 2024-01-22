@@ -1,3 +1,18 @@
+/**
+*
+* Solution to course project # 1
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2023/2024
+*
+* @author Serhan Chavdarliev
+* @idnumber 8MI0600316
+* @compiler VC
+*
+* <file with helper functions>
+*
+*/
+
 
 #include <iostream>
 #include <vector> // vector
